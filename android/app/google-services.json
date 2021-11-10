@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "20192912162",
+    "project_id": "buspay-739e2",
+    "storage_bucket": "buspay-739e2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:20192912162:android:290961e053e32356fdfb7b",
+        "android_client_info": {
+          "package_name": "com.codec.buspay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "20192912162-caee8colp1b6v55fkodjk76jf56d0eo3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBZFnVh7VoQiGNUh-D_QsINYRwanftG54"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "20192912162-caee8colp1b6v55fkodjk76jf56d0eo3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
