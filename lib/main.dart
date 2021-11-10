@@ -1,4 +1,5 @@
 import 'package:buspay/screens/map_screen.dart';
+import 'package:buspay/screens/routes.dart';
 import 'package:buspay/screens/scanner.dart';
 import 'package:buspay/services/bus_data.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -27,10 +28,12 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         '/MapScreen': (context) => const MapScreen(),
-        '/Scanner': (context) => const Scanner()
+        '/Scanner': (context) => const Scanner(),
+        '/RouteTimeline': (context) => const RouteTimeline(),
+        '/temp': (context) => const TRoutess(),
       },
-      // home: MapScreen(),
-      home: Buss(),
+      home: MapScreen(),
+      // home: RouteTimeline(),
     );
   }
 }

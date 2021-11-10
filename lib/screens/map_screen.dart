@@ -22,7 +22,7 @@ class _MapScreenState extends State<MapScreen> {
     if (!_serviceEnabled!) {
       _serviceEnabled = await locationTracker.requestService();
       if (!_serviceEnabled!) {
-        print('Service not enebled');
+        print('Service not enabled');
         return;
       }
     }
@@ -37,11 +37,11 @@ class _MapScreenState extends State<MapScreen> {
     var _locationData = await locationTracker.getLocation();
     updateMarkerAndCircle(_locationData);
 
-    locationTracker.onLocationChanged.listen((newLocData) {
-      newLoactionData = newLocData;
-      updateMarkerAndCircle(newLocData);
-      // print(newLocData);
-    });
+    // locationTracker.onLocationChanged.listen((newLocData) {
+    //   newLoactionData = newLocData;
+    //   updateMarkerAndCircle(newLocData);
+    //   // print(newLocData);
+    // });
   }
 
   void updateMarkerAndCircle(newLocData) {

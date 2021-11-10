@@ -17,8 +17,11 @@ class _BussState extends State<Buss> {
       ),
       body: TextButton(
         onPressed: () {
-          busData.fetchData();
-          print(busData.route!["0"]);
+          // busData.busId = "KA04MX0002";
+          // // setState(() {});
+          // // print(busData.busId);
+          // busData.fetchData();
+          // print(busData.route);
         },
         child: Text('click me'),
       ),
@@ -26,4 +29,28 @@ class _BussState extends State<Buss> {
   }
 }
 
-BusData busData = BusData(busId: "KA04MX0001");
+class TRoutess extends StatefulWidget {
+  const TRoutess({Key? key}) : super(key: key);
+
+  @override
+  _TRoutessState createState() => _TRoutessState();
+}
+
+class ScreenArguments {
+  var routes;
+  ScreenArguments(this.routes);
+}
+
+class _TRoutessState extends State<TRoutess> {
+  @override
+  Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
+    BusRoute _bus = BusRoute(args.routes);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('tmp'),
+      ),
+      body: Text(args.routes.toString()),
+    );
+  }
+}

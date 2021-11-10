@@ -1,35 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class BusData {
+class BusRoute {
   String? busId;
-  // List<String>? stopName;
-  // List<GeoPoint>? stopPoints;
-  Map? route;
+  Map? route = {};
+  List stopNames = [];
+  List stopPoints = [];
+  List<bool> isfocused = [];
+  int startRoute = 0;
+  int endRoute = -1;
 
-  BusData({this.busId});
-
-  void fetchData() async {
-    try {
-      var collection = FirebaseFirestore.instance.collection('bus');
-      var docSnapshot = await collection.doc(this.busId).get();
-
-      if (docSnapshot.exists) {
-        Map data = (docSnapshot.data() as Map);
-        this.route = (data['route'] as Map);
-        // print(route);
-        // print(route.values.elementAt(1).values.elementAt(0).latitude);
-
-        // for (int i = 0; i < this.route!.length; i++) {
-        // this.stopName!.add(route.keys.elementAt(i));
-        // this.stopPoints!.add(route.values.elementAt(i));
-        // print(route.keys.elementAt(i));
-        // print(route.values.elementAt(i));
-        // }
-        // print(this.stopName);
-        // print(this.stopPoints);
-      }
-    } catch (e) {
-      print(e.toString());
+  BusRoute(route) {
+    this.route = route;
+    stopNames = [];
+    stopPoints = [];
+    for (int i = 0; i < route.length; i++) {
+      stopNames.add(route[i.toString()].keys.elementAt(0));
+      stopPoints.add(route[i.toString()].values.elementAt(0));
+      isfocused.add(i == 0 ? true : false);
     }
+    // print(stopNames);
   }
 }
