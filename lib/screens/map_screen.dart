@@ -83,7 +83,9 @@ class _MapScreenState extends State<MapScreen> {
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Colors.blue),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/Scanner');
+                    },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 60.0, vertical: 8.0),

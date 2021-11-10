@@ -27,6 +27,8 @@ dependencies:
   location: ^4.2.0
   google_maps_flutter:
 
+  qr_code_scanner: ^0.5.2
+
   # flutter_statusbarcolor: ^0.2.3
 
 
