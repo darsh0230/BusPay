@@ -67,7 +67,32 @@ class _MapScreenState extends State<MapScreen> {
             onMapCreated: _onMapCreated,
             zoomControlsEnabled: false,
             markers: mapsMarkers,
-          )
+          ),
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 30.0),
+                child: TextButton(
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40.0),
+                              side: BorderSide(color: Colors.blue))),
+                      // foregroundColor:
+                      //     MaterialStateProperty.all<Color>(Colors.white),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.blue),
+                    ),
+                    onPressed: () {},
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 60.0, vertical: 8.0),
+                      child: Text(
+                        'Scanner',
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                    )),
+              ))
         ],
       ),
     );
