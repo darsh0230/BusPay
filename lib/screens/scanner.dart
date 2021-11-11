@@ -17,6 +17,7 @@ class _ScannerState extends State<Scanner> {
   // Barcode? qrResult;
   QRViewController? qrController;
   String QrCode = "";
+  bool flashOn = false;
 
   void _onQRViewCreated(QRViewController controller) {
     this.qrController = controller;
@@ -27,6 +28,7 @@ class _ScannerState extends State<Scanner> {
 
       setState(() {
         QrCode = "";
+        // qrController!.pauseCamera();
       });
 
       if (scanData.code.contains(new RegExp(r'bus-', caseSensitive: false)) &&
@@ -69,17 +71,54 @@ class _ScannerState extends State<Scanner> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: QRView(
-        key: qrKey,
-        onQRViewCreated: _onQRViewCreated,
-        overlay: QrScannerOverlayShape(
-          borderColor: Theme.of(context).accentColor,
-          borderRadius: 10,
-          borderLength: 20,
-          borderWidth: 10,
-          cutOutSize: MediaQuery.of(context).size.width * 0.8,
+      body: Stack(children: [
+        QRView(
+          key: qrKey,
+          onQRViewCreated: _onQRViewCreated,
+          overlay: QrScannerOverlayShape(
+            borderColor: Theme.of(context).accentColor,
+            borderRadius: 10,
+            borderLength: 20,
+            borderWidth: 10,
+            cutOutSize: MediaQuery.of(context).size.width * 0.8,
+          ),
         ),
-      ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
+                child: FloatingActionButton(
+                  onPressed: () async {
+                    await qrController!.flipCamera();
+                  },
+                  child: Icon(Icons.cameraswitch_outlined),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FloatingActionButton(
+                  onPressed: () async {
+                    await qrController!.toggleFlash();
+                    setState(() => flashOn = !flashOn);
+                  },
+                  child: Icon(flashOn ? Icons.flash_off : Icons.flash_on),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FloatingActionButton(
+                  onPressed: () {},
+                  child: Icon(Icons.bug_report_outlined),
+                ),
+              )
+            ],
+          ),
+        )
+      ]),
     );
   }
 }

@@ -7,7 +7,7 @@ class BusRoute {
   List stopPoints = [];
   List<bool> isfocused = [];
   int startRoute = 0;
-  int endRoute = -1;
+  int endRoute = 0;
 
   BusRoute(route) {
     this.route = route;

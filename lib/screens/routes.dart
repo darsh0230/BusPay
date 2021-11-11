@@ -19,6 +19,13 @@ class _RouteTimelineState extends State<RouteTimeline> {
   int startRoute = 0;
   int endRoute = -1;
 
+  var stInd = Colors.blue;
+  var endInd = Colors.green;
+  var midInd = Colors.blue.shade100;
+  var ind = Colors.grey;
+  var focusedIndLine = Colors.blue.shade100;
+  var indLine = Colors.black54;
+
   Widget _timelineTile(int index, route, bool isFirst, bool isLast) {
     // print(route.isfocused);
     return TimelineTile(
@@ -27,31 +34,31 @@ class _RouteTimelineState extends State<RouteTimeline> {
       isLast: isLast,
       indicatorStyle: IndicatorStyle(
           color: !route.isfocused[index]
-              ? Colors.grey
+              ? ind
               : route.startRoute == index
-                  ? Colors.blue
+                  ? stInd
                   : route.endRoute == index
-                      ? Colors.green
-                      : Colors.blue.shade100,
+                      ? endInd
+                      : midInd,
           padding: EdgeInsets.all(5)),
       beforeLineStyle: LineStyle(
         color: index - 1 < 0
-            ? Colors.black54
+            ? indLine
             : !route.isfocused[index]
-                ? Colors.black54
+                ? indLine
                 : route.isfocused[index - 1]
-                    ? Colors.blue.shade100
-                    : Colors.black54,
+                    ? focusedIndLine
+                    : indLine,
         // thickness: 10
       ),
       afterLineStyle: LineStyle(
         color: index + 1 >= route.stopNames.length
-            ? Colors.black54
+            ? indLine
             : !route.isfocused[index]
-                ? Colors.black54
+                ? indLine
                 : route.isfocused[index + 1]
-                    ? Colors.blue.shade100
-                    : Colors.black54,
+                    ? focusedIndLine
+                    : indLine,
         // thickness: 10
       ),
       endChild: GestureDetector(
@@ -119,7 +126,7 @@ class _RouteTimelineState extends State<RouteTimeline> {
     route.isfocused = isFocused;
     route.startRoute = startRoute;
     route.endRoute = endRoute;
-    print(route.isfocused);
+    // print(route.isfocused);
     return Scaffold(
       appBar: AppBar(
         title: Text('Routes'),

@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
@@ -14,6 +17,18 @@ class _MapScreenState extends State<MapScreen> {
       CameraPosition(target: LatLng(13.0368676, 77.5631121), zoom: 14.5);
   bool? _serviceEnabled;
   PermissionStatus? _permissionGranted;
+
+  BitmapDescriptor curLocIcon = BitmapDescriptor.defaultMarker;
+
+  Future<Uint8List> getBytesFromAsset(String path, int width) async {
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+        targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+        .buffer
+        .asUint8List();
+  }
 
   Future<void> _onMapCreated(controller) async {
     mapsController = controller;
@@ -35,7 +50,9 @@ class _MapScreenState extends State<MapScreen> {
     }
 
     var _locationData = await locationTracker.getLocation();
+    newLoactionData = _locationData;
     updateMarkerAndCircle(_locationData);
+    gotoLocation(_locationData.latitude, _locationData.longitude);
 
     // locationTracker.onLocationChanged.listen((newLocData) {
     //   newLoactionData = newLocData;
@@ -48,11 +65,22 @@ class _MapScreenState extends State<MapScreen> {
     LatLng latlng = LatLng(newLocData.latitude, newLocData.longitude);
     setState(() {
       mapsMarkers.add(Marker(
-        markerId: MarkerId('my_loc'),
-        position: latlng,
-        draggable: false,
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
-      ));
+          markerId: MarkerId('my_loc'),
+          position: latlng,
+          draggable: false,
+          // icon: curLocIcon,
+          icon: BitmapDescriptor.defaultMarkerWithHue(
+              BitmapDescriptor.hueViolet)));
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5),
+            'assets/imgs/location-arrow-flat.png')
+        .then((d) {
+      curLocIcon = d;
     });
   }
 
@@ -94,7 +122,21 @@ class _MapScreenState extends State<MapScreen> {
                         style: TextStyle(fontSize: 20, color: Colors.white),
                       ),
                     )),
-              ))
+              )),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+              child: FloatingActionButton(
+                onPressed: () {
+                  gotoLocation(
+                      newLoactionData!.latitude, newLoactionData!.longitude);
+                },
+                child: Icon(Icons.location_on),
+              ),
+            ),
+          )
         ],
       ),
     );
@@ -105,3 +147,13 @@ GoogleMapController? mapsController;
 Location locationTracker = new Location();
 LocationData? newLoactionData;
 Set<Marker> mapsMarkers = {};
+
+Future<void> gotoLocation(double? lat, double? long) async {
+  final GoogleMapController controller = mapsController!;
+  controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+    target: LatLng(lat!, long!),
+    zoom: 15,
+    // tilt: 50.0,
+    bearing: 45.0,
+  )));
+}

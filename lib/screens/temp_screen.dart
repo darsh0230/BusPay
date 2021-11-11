@@ -17,7 +17,7 @@ class _BussState extends State<Buss> {
       ),
       body: TextButton(
         onPressed: () {
-          // busData.busId = "KA04MX0002";
+          // busData.busId = "KA04MX0001";
           // // setState(() {});
           // // print(busData.busId);
           // busData.fetchData();
