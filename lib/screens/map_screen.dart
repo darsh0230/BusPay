@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:buspay/providers/route_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -90,6 +91,31 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text('Profile'),
+            ),
+            ListTile(
+              title: const Text('My Bookings'),
+              onTap: () {},
+            ),
+            ListTile(
+              title: const Text('logout'),
+              onTap: () async {
+                var _auth = FirebaseAuth.instance;
+                await _auth.signOut();
+                Navigator.of(context).pushReplacementNamed('/signIn');
+              },
+            ),
+          ],
+        ),
+      ),
       body: Stack(
         children: <Widget>[
           GoogleMap(

@@ -1,9 +1,14 @@
+import 'package:buspay/models/user.dart';
 import 'package:buspay/providers/route_provider.dart';
+import 'package:buspay/screens/auth/auth.dart';
+import 'package:buspay/screens/auth/register.dart';
+import 'package:buspay/screens/auth/sign_in.dart';
 import 'package:buspay/screens/map_screen.dart';
 import 'package:buspay/screens/routes.dart';
 import 'package:buspay/screens/scanner.dart';
 import 'package:buspay/screens/ticket.dart';
 import 'package:buspay/services/bus_data.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -12,9 +17,12 @@ import 'package:provider/provider.dart';
 
 // import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => RouteProvider()),
+    // ChangeNotifierProvider(create: (_) => UserData()),
   ], child: MyApp()));
 }
 
@@ -24,7 +32,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // FlutterStatusbarcolor.setStatusBarColor(Colors.blue);
-    Firebase.initializeApp();
+    // Firebase.initializeApp();
+    // var auth = FirebaseAuth.instance;
     return MaterialApp(
       title: 'BusPay',
       debugShowCheckedModeBanner: false,
@@ -36,10 +45,45 @@ class MyApp extends StatelessWidget {
         '/Scanner': (context) => const Scanner(),
         '/RouteTimeline': (context) => const RouteTimeline(),
         '/ticket': (context) => const TicketScreen(),
+        '/signIn': (context) => const SignIn(),
+        '/register': (context) => const Register(),
         '/temp': (context) => const TRoutess(),
       },
-      home: MapScreen(),
+      home: Wrapper(),
       // home: TicketScreen(),
     );
+  }
+}
+
+class Wrapper extends StatefulWidget {
+  const Wrapper({Key? key}) : super(key: key);
+
+  @override
+  _WrapperState createState() => _WrapperState();
+}
+
+class _WrapperState extends State<Wrapper> {
+  bool loggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    var auth = FirebaseAuth.instance;
+    auth.authStateChanges().listen((user) {
+      if (user != null) {
+        setState(() => loggedIn = true);
+      } else {
+        setState(() => loggedIn = false);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!loggedIn) {
+      return Auth();
+    } else {
+      return MapScreen();
+    }
   }
 }
