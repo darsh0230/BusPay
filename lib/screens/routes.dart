@@ -1,6 +1,8 @@
 import 'package:buspay/services/bus_data.dart';
 import 'package:flutter/material.dart';
 import 'package:timeline_tile/timeline_tile.dart';
+import 'package:buspay/providers/route_provider.dart';
+import 'package:provider/provider.dart';
 
 class RouteTimeline extends StatefulWidget {
   const RouteTimeline({Key? key}) : super(key: key);
@@ -17,7 +19,7 @@ class RouteArguments {
 class _RouteTimelineState extends State<RouteTimeline> {
   List<bool> isFocused = [true];
   int startRoute = 0;
-  int endRoute = -1;
+  int endRoute = 0;
 
   var stInd = Colors.blue;
   var endInd = Colors.green;
@@ -157,7 +159,7 @@ class _RouteTimelineState extends State<RouteTimeline> {
               children: [
                 Container(
                   // color: Colors.black,
-                  width: MediaQuery.of(context).size.height * 0.21,
+                  width: MediaQuery.of(context).size.width * 0.45,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -168,10 +170,15 @@ class _RouteTimelineState extends State<RouteTimeline> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    context
+                        .read<RouteProvider>()
+                        .updateRoute(route.stopNames, route.stopPoints);
+                    Navigator.of(context).pushReplacementNamed('/ticket');
+                  },
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.1,
-                    width: MediaQuery.of(context).size.height * 0.25,
+                    width: MediaQuery.of(context).size.width * 0.5,
                     color: Colors.amber,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

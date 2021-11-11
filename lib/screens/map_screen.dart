@@ -1,9 +1,11 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:buspay/providers/route_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:provider/provider.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -31,6 +33,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _onMapCreated(controller) async {
+    // print(context.watch<RouteProvider>().stopNames);
     mapsController = controller;
     //TODO: get this at the start of the app and display a page if location is not enabled like in bounce
     _serviceEnabled = await locationTracker.serviceEnabled();
@@ -136,7 +139,11 @@ class _MapScreenState extends State<MapScreen> {
                 child: Icon(Icons.location_on),
               ),
             ),
-          )
+          ),
+          // Align(
+          //   alignment: Alignment.center,
+          //   child: Text(context.watch<RouteProvider>().stopNames.toString()),
+          // )
         ],
       ),
     );
