@@ -111,7 +111,21 @@ class _ScannerState extends State<Scanner> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: FloatingActionButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    var collection =
+                        FirebaseFirestore.instance.collection('bus');
+                    docSnapshot = await collection.doc('KA04MX0001').get();
+                    setState(() {
+                      if (docSnapshot!.exists) {
+                        Map data = (docSnapshot.data() as Map);
+                        var route = (data['route'] as Map);
+                        qrController!.pauseCamera();
+                        Navigator.of(context).pushReplacementNamed(
+                            '/RouteTimeline',
+                            arguments: RouteArguments(route));
+                      }
+                    });
+                  },
                   child: Icon(Icons.bug_report_outlined),
                 ),
               )

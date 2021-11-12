@@ -4,6 +4,7 @@ import 'package:buspay/screens/auth/auth.dart';
 import 'package:buspay/screens/auth/register.dart';
 import 'package:buspay/screens/auth/sign_in.dart';
 import 'package:buspay/screens/map_screen.dart';
+import 'package:buspay/screens/my_orders.dart';
 import 'package:buspay/screens/routes.dart';
 import 'package:buspay/screens/scanner.dart';
 import 'package:buspay/screens/ticket.dart';
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
         '/ticket': (context) => const TicketScreen(),
         '/signIn': (context) => const SignIn(),
         '/register': (context) => const Register(),
+        '/myOrders': (context) => const MyOrders(),
         '/temp': (context) => const TRoutess(),
       },
       home: Wrapper(),

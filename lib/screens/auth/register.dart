@@ -99,7 +99,7 @@ class _RegisterState extends State<Register> {
                         // side: BorderSide(color: Colors.red)
                       ))),
                       child: Text(
-                        'Sign In',
+                        'Already have an Account?',
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () {

@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:buspay/providers/route_provider.dart';
+import 'package:buspay/services/orders.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -94,6 +95,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -106,7 +108,12 @@ class _MapScreenState extends State<MapScreen> {
             ),
             ListTile(
               title: const Text('My Bookings'),
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).pushNamed('/myOrders');
+                // Orders _orders = Orders();
+                // var _auth = FirebaseAuth.instance;
+                // _orders.getOrders(_auth.currentUser!.uid);
+              },
             ),
             ListTile(
               title: const Text('logout'),
@@ -172,7 +179,18 @@ class _MapScreenState extends State<MapScreen> {
           // Align(
           //   alignment: Alignment.center,
           //   child: Text(context.watch<RouteProvider>().stopNames.toString()),
-          // )
+          // ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 45.0),
+              child: Form(
+                  child: TextFormField(
+                      decoration: textInputDecoration.copyWith(
+                          hintText: 'Enter Location'))),
+            ),
+          )
         ],
       ),
     );
@@ -193,3 +211,20 @@ Future<void> gotoLocation(double? lat, double? long) async {
     bearing: 45.0,
   )));
 }
+
+const textInputDecoration = InputDecoration(
+  fillColor: Colors.white,
+  filled: true,
+  contentPadding: EdgeInsets.all(12.0),
+  // border: OutlineInputBorder(
+  //   borderRadius: const BorderRadius.all(
+  //     Radius.circular(40.0),
+  //   ),
+  // ),
+  enabledBorder: OutlineInputBorder(
+    borderSide: BorderSide(color: Colors.white, width: 2.0),
+  ),
+  focusedBorder: OutlineInputBorder(
+    borderSide: BorderSide(color: Colors.white, width: 2.0),
+  ),
+);

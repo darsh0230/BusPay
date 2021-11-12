@@ -97,7 +97,7 @@ class _SignInState extends State<SignIn> {
                         // side: BorderSide(color: Colors.red)
                       ))),
                       child: Text(
-                        'Register',
+                        "Don't have an Account?",
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () {

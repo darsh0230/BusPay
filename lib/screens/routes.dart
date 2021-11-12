@@ -1,4 +1,6 @@
 import 'package:buspay/services/bus_data.dart';
+import 'package:buspay/services/orders.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:buspay/providers/route_provider.dart';
@@ -26,7 +28,10 @@ class _RouteTimelineState extends State<RouteTimeline> {
   var midInd = Colors.blue.shade100;
   var ind = Colors.grey;
   var focusedIndLine = Colors.blue.shade100;
-  var indLine = Colors.black54;
+  var indLine = Colors.black26;
+
+  int adult = 1;
+  int child = 0;
 
   Widget _timelineTile(int index, route, bool isFirst, bool isLast) {
     // print(route.isfocused);
@@ -132,7 +137,7 @@ class _RouteTimelineState extends State<RouteTimeline> {
     // print(route.isfocused);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Routes'),
+        title: Text('KA04MX0001'),
       ),
       body: Column(children: [
         Container(
@@ -171,10 +176,19 @@ class _RouteTimelineState extends State<RouteTimeline> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     context
                         .read<RouteProvider>()
                         .updateRoute(route.stopNames, route.stopPoints);
+                    Orders _order = Orders();
+                    var _auth = FirebaseAuth.instance;
+                    await _order.placeOrder(
+                        _auth.currentUser!.uid,
+                        1,
+                        0,
+                        ((startRoute - endRoute) * 5).abs(),
+                        route.stopNames[startRoute],
+                        route.stopNames[endRoute]);
                     Navigator.of(context).pushReplacementNamed('/ticket');
                   },
                   child: Container(
