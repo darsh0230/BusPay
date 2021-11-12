@@ -35,6 +35,9 @@ class _MapScreenState extends State<MapScreen> {
 
   Future<void> _onMapCreated(controller) async {
     // print(context.watch<RouteProvider>().stopNames);
+    // var _auth = FirebaseAuth.instance;
+    // print(_auth.currentUser!.uid);
+
     mapsController = controller;
     //TODO: get this at the start of the app and display a page if location is not enabled like in bounce
     _serviceEnabled = await locationTracker.serviceEnabled();

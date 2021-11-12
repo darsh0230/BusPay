@@ -109,6 +109,7 @@ class _RouteTimelineState extends State<RouteTimeline> {
                 Text(
                   route.stopNames[index],
                   textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
                 ),
               ],
             ),
@@ -139,7 +140,7 @@ class _RouteTimelineState extends State<RouteTimeline> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListView.builder(
-              itemCount: 4,
+              itemCount: route.stopNames.length,
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
                 // BusRoute route = BusRoute(args.routes);
