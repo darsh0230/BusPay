@@ -5,7 +5,7 @@ class RouteProvider with ChangeNotifier {
   List stopPoints = [];
 
   void updateRoute(stopNames, stopPoints) {
-    print('changed');
+    // print('changed');
     this.stopNames = stopNames;
     this.stopPoints = stopPoints;
     notifyListeners();

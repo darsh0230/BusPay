@@ -141,7 +141,7 @@ class _RouteTimelineState extends State<RouteTimeline> {
       ),
       body: Column(children: [
         Container(
-          height: MediaQuery.of(context).size.height * 0.8,
+          height: MediaQuery.of(context).size.height * 0.74,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListView.builder(
@@ -156,11 +156,45 @@ class _RouteTimelineState extends State<RouteTimeline> {
           ),
         ),
         Container(
-            // constraints: const BoxConstraints(minHeight: 80),
-            // color: Colors.red,
-            height: MediaQuery.of(context).size.height * 0.1,
-            // color: Colors.red,
-            child: Row(
+            child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                    width: MediaQuery.of(context).size.width * 0.45,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                            onPressed: () =>
+                                setState(() => adult != 0 ? adult-- : null),
+                            icon: Icon(Icons.remove)),
+                        Text('Adult: $adult'),
+                        IconButton(
+                            onPressed: () => setState(() => adult++),
+                            icon: Icon(Icons.add)),
+                      ],
+                    )),
+                Container(
+                    width: MediaQuery.of(context).size.width * 0.45,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                            onPressed: () =>
+                                setState(() => child != 0 ? child-- : null),
+                            icon: Icon(Icons.remove)),
+                        Text('Child: $child'),
+                        IconButton(
+                            onPressed: () => setState(() => child++),
+                            icon: Icon(Icons.add)),
+                      ],
+                    ))
+              ],
+            ),
+            // bottom row for payment option
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
@@ -184,15 +218,16 @@ class _RouteTimelineState extends State<RouteTimeline> {
                     var _auth = FirebaseAuth.instance;
                     await _order.placeOrder(
                         _auth.currentUser!.uid,
-                        1,
-                        0,
+                        adult,
+                        child,
                         ((startRoute - endRoute) * 5).abs(),
                         route.stopNames[startRoute],
                         route.stopNames[endRoute]);
                     Navigator.of(context).pushReplacementNamed('/ticket');
                   },
                   child: Container(
-                    height: MediaQuery.of(context).size.height * 0.1,
+                    height: MediaQuery.of(context).size.height * 0.08,
+                    // height: 35.0,
                     width: MediaQuery.of(context).size.width * 0.5,
                     color: Colors.amber,
                     child: Column(
@@ -208,7 +243,9 @@ class _RouteTimelineState extends State<RouteTimeline> {
                   ),
                 )
               ],
-            )),
+            ),
+          ],
+        )),
       ]),
     );
   }

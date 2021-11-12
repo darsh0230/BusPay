@@ -1,7 +1,9 @@
 import 'package:buspay/services/orders.dart';
+import 'package:buspay/shared/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class MyOrders extends StatefulWidget {
   const MyOrders({Key? key}) : super(key: key);
@@ -19,6 +21,7 @@ class _MyOrdersState extends State<MyOrders> {
         FirebaseFirestore.instance.collection('orders');
     await allOrders
         .where("uid", isEqualTo: _auth.currentUser!.uid)
+        .orderBy('date', descending: true)
         .get()
         .then((value) {
       value.docs.forEach((element) {
@@ -31,6 +34,7 @@ class _MyOrdersState extends State<MyOrders> {
   }
 
   Widget _myOrderCards(context, myOrders) {
+    final DateFormat formatter = DateFormat('yyyy-MM-dd H:m:s');
     return GestureDetector(
       onTap: () {},
       child: Padding(
@@ -45,6 +49,7 @@ class _MyOrdersState extends State<MyOrders> {
             height: 120.0,
             // margin: ,
             child: Text(myOrders.toString()),
+            // child: Text(formatter.format(myOrders['date'].toDate())),
           ),
         ),
       ),
@@ -70,7 +75,7 @@ class _MyOrdersState extends State<MyOrders> {
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
-                return Text('waiting');
+                return Loading();
               default:
                 if (snapshot.hasError) {
                   return Text('Error');

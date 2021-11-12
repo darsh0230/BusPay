@@ -17,12 +17,14 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool enableMarkers = false;
   static const _initialCameraPosition =
       CameraPosition(target: LatLng(13.0368676, 77.5631121), zoom: 14.5);
   bool? _serviceEnabled;
   PermissionStatus? _permissionGranted;
 
-  BitmapDescriptor curLocIcon = BitmapDescriptor.defaultMarker;
+  // BitmapDescriptor curLocIcon = BitmapDescriptor.defaultMarker;
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);
@@ -62,11 +64,30 @@ class _MapScreenState extends State<MapScreen> {
     updateMarkerAndCircle(_locationData);
     gotoLocation(_locationData.latitude, _locationData.longitude);
 
-    // locationTracker.onLocationChanged.listen((newLocData) {
-    //   newLoactionData = newLocData;
-    //   updateMarkerAndCircle(newLocData);
-    //   // print(newLocData);
-    // });
+    locationTracker.onLocationChanged.listen((newLocData) {
+      newLoactionData = newLocData;
+      updateMarkerAndCircle(newLocData);
+      // print(newLocData);
+    });
+  }
+
+  void updateBusRouteMarkers(busRoute) {
+    setState(() {
+      if (busRoute.stopNames.length > 0 && enableMarkers) {
+        for (int i = 0; i < busRoute.stopNames.length; i++) {
+          // print(busRoute.stopNames[i]);
+          mapsMarkers.add(Marker(
+              markerId: MarkerId(busRoute.stopNames[i]),
+              position: LatLng(
+                busRoute.stopPoints[i].latitude,
+                busRoute.stopPoints[i].longitude,
+              ),
+              infoWindow: InfoWindow(title: busRoute.stopNames[i]),
+              draggable: false,
+              icon: BitmapDescriptor.defaultMarker));
+        }
+      }
+    });
   }
 
   void updateMarkerAndCircle(newLocData) {
@@ -82,19 +103,23 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5),
-            'assets/imgs/location-arrow-flat.png')
-        .then((d) {
-      curLocIcon = d;
-    });
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5),
+  //           'assets/imgs/location-arrow-flat.png')
+  //       .then((d) {
+  //     curLocIcon = d;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
+    var busRoute = context.watch<RouteProvider>();
+    updateBusRouteMarkers(busRoute);
+    // setState(() {});
     return Scaffold(
+      key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
       drawer: Drawer(
         child: ListView(
@@ -104,10 +129,18 @@ class _MapScreenState extends State<MapScreen> {
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
-              child: Text('Profile'),
+              child: Text('Welcome to BusPay'),
             ),
             ListTile(
-              title: const Text('My Bookings'),
+              title: Row(
+                children: [
+                  Icon(Icons.screen_search_desktop_sharp),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('My Bookings'),
+                  ),
+                ],
+              ),
               onTap: () {
                 Navigator.of(context).pushNamed('/myOrders');
                 // Orders _orders = Orders();
@@ -116,7 +149,15 @@ class _MapScreenState extends State<MapScreen> {
               },
             ),
             ListTile(
-              title: const Text('logout'),
+              title: Row(
+                children: [
+                  Icon(Icons.logout),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('logout'),
+                  ),
+                ],
+              ),
               onTap: () async {
                 var _auth = FirebaseAuth.instance;
                 await _auth.signOut();
@@ -172,25 +213,50 @@ class _MapScreenState extends State<MapScreen> {
                   gotoLocation(
                       newLoactionData!.latitude, newLoactionData!.longitude);
                 },
-                child: Icon(Icons.location_on),
+                child: Icon(Icons.my_location),
               ),
             ),
           ),
-          // Align(
-          //   alignment: Alignment.center,
-          //   child: Text(context.watch<RouteProvider>().stopNames.toString()),
-          // ),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+              child: FloatingActionButton(
+                onPressed: () {
+                  setState(() {
+                    enableMarkers = !enableMarkers;
+                    mapsMarkers = {};
+                    updateMarkerAndCircle(newLoactionData);
+                  });
+                },
+                child: Icon(
+                    enableMarkers ? Icons.location_off : Icons.location_on),
+              ),
+            ),
+          ),
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 45.0),
-              child: Form(
-                  child: TextFormField(
-                      decoration: textInputDecoration.copyWith(
-                          hintText: 'Enter Location'))),
+              child: Container(
+                color: Colors.white,
+                child: Row(
+                  children: [
+                    IconButton(
+                        onPressed: () =>
+                            _scaffoldKey.currentState!.openDrawer(),
+                        icon: Icon(Icons.menu)),
+                    Flexible(
+                        child: Form(
+                            child: TextFormField(
+                                decoration: textInputDecoration))),
+                  ],
+                ),
+              ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -213,6 +279,7 @@ Future<void> gotoLocation(double? lat, double? long) async {
 }
 
 const textInputDecoration = InputDecoration(
+  hintText: 'Enter Location',
   fillColor: Colors.white,
   filled: true,
   contentPadding: EdgeInsets.all(12.0),
