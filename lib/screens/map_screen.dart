@@ -134,7 +134,7 @@ class _MapScreenState extends State<MapScreen> {
             ListTile(
               title: Row(
                 children: [
-                  Icon(Icons.screen_search_desktop_sharp),
+                  Icon(Icons.screen_search_desktop_outlined),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text('My Bookings'),
@@ -147,6 +147,18 @@ class _MapScreenState extends State<MapScreen> {
                 // var _auth = FirebaseAuth.instance;
                 // _orders.getOrders(_auth.currentUser!.uid);
               },
+            ),
+            ListTile(
+              title: Row(
+                children: [
+                  Icon(Icons.account_balance_wallet_outlined),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('My Wallet: ₹500'),
+                  ),
+                ],
+              ),
+              onTap: () {},
             ),
             ListTile(
               title: Row(

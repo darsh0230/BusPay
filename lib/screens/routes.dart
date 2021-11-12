@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:buspay/screens/ticket.dart';
 import 'package:buspay/services/bus_data.dart';
 import 'package:buspay/services/orders.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,6 +35,14 @@ class _RouteTimelineState extends State<RouteTimeline> {
 
   int adult = 1;
   int child = 0;
+  int ticketPrice = 0;
+
+  final _chars =
+      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  Random _rnd = Random();
+
+  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
+      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
   Widget _timelineTile(int index, route, bool isFirst, bool isLast) {
     // print(route.isfocused);
@@ -82,6 +93,7 @@ class _RouteTimelineState extends State<RouteTimeline> {
           isFocused = route.isfocused;
           startRoute = route.startRoute;
           endRoute = route.endRoute;
+          ticketPrice = ((startRoute - endRoute) * 5).abs();
           setState(() {});
           // print(route.isfocused);
         },
@@ -98,6 +110,7 @@ class _RouteTimelineState extends State<RouteTimeline> {
           isFocused = route.isfocused;
           startRoute = route.startRoute;
           endRoute = route.endRoute;
+          ticketPrice = ((startRoute - endRoute) * 5).abs();
           setState(() {});
         },
         child: Padding(
@@ -167,12 +180,22 @@ class _RouteTimelineState extends State<RouteTimeline> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         IconButton(
-                            onPressed: () =>
-                                setState(() => adult != 0 ? adult-- : null),
+                            onPressed: () => setState(() {
+                                  adult != 0 ? adult-- : null;
+                                  // ticketPrice -=
+                                  //     ((startRoute - endRoute) * 5).abs();
+                                  // ticketPrice < 0
+                                  //     ? ticketPrice = 0
+                                  //     : ticketPrice = ticketPrice;
+                                }),
                             icon: Icon(Icons.remove)),
                         Text('Adult: $adult'),
                         IconButton(
-                            onPressed: () => setState(() => adult++),
+                            onPressed: () => setState(() {
+                                  adult++;
+                                  // ticketPrice +=
+                                  //     ((startRoute - endRoute) * 5).abs();
+                                }),
                             icon: Icon(Icons.add)),
                       ],
                     )),
@@ -204,26 +227,40 @@ class _RouteTimelineState extends State<RouteTimeline> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text('Rs.${((startRoute - endRoute) * 5).abs()}',
+                      Text(
+                          'Rs.${(ticketPrice * adult) + (ticketPrice * child * 0.5).round()}',
                           style: TextStyle(fontSize: 20.0)),
                     ],
                   ),
                 ),
                 GestureDetector(
                   onTap: () async {
-                    context
-                        .read<RouteProvider>()
-                        .updateRoute(route.stopNames, route.stopPoints);
-                    Orders _order = Orders();
-                    var _auth = FirebaseAuth.instance;
-                    await _order.placeOrder(
-                        _auth.currentUser!.uid,
-                        adult,
-                        child,
-                        ((startRoute - endRoute) * 5).abs(),
-                        route.stopNames[startRoute],
-                        route.stopNames[endRoute]);
-                    Navigator.of(context).pushReplacementNamed('/ticket');
+                    if (adult != 0 || child != 0) {
+                      context
+                          .read<RouteProvider>()
+                          .updateRoute(route.stopNames, route.stopPoints);
+                      Orders _order = Orders();
+                      var _auth = FirebaseAuth.instance;
+                      String _ticketId = getRandomString(12);
+                      await _order.placeOrder(
+                          _auth.currentUser!.uid,
+                          adult,
+                          child,
+                          (ticketPrice * adult) +
+                              (ticketPrice * child * 0.5).round(),
+                          route.stopNames[startRoute],
+                          route.stopNames[endRoute],
+                          _ticketId);
+                      Navigator.of(context).pushReplacementNamed('/ticket',
+                          arguments: TicketArguments(
+                              adult: adult,
+                              child: child,
+                              stRoute: route.stopNames[startRoute],
+                              endRoute: route.stopNames[endRoute],
+                              ticketId: _ticketId,
+                              ticketPrice: (ticketPrice * adult) +
+                                  (ticketPrice * child * 0.5).round()));
+                    }
                   },
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.08,

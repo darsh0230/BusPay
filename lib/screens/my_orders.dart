@@ -34,21 +34,83 @@ class _MyOrdersState extends State<MyOrders> {
   }
 
   Widget _myOrderCards(context, myOrders) {
-    final DateFormat formatter = DateFormat('yyyy-MM-dd H:m:s');
+    final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
     return GestureDetector(
       onTap: () {},
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Material(
           color: Colors.white,
-          elevation: 10.0,
-          borderRadius: BorderRadius.circular(12.0),
+          elevation: 5.0,
+          borderRadius: BorderRadius.circular(4.0),
           shadowColor: Color(0x802196F3),
           child: Container(
             width: MediaQuery.of(context).size.width * 0.8,
             height: 120.0,
-            // margin: ,
-            child: Text(myOrders.toString()),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  // Order ID
+                  Text(
+                    myOrders['orderId'].toString(),
+                    style: ordersTextStyle,
+                  ),
+                  // To and FROM
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'FROM:',
+                        style: ordersTextStyle,
+                      ),
+                      Text(
+                        'TO:',
+                        style: ordersTextStyle,
+                      ),
+                    ],
+                  ),
+                  // to and from data
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(myOrders['stRoute']),
+                      Text(myOrders['endRoute'])
+                    ],
+                  ),
+                  SizedBox(
+                    height: 6.0,
+                  ),
+                  // ticket price
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        child: Row(
+                          children: [
+                            Text('Adult: ${myOrders['adult'].toString()} '),
+                            Text('Child: ${myOrders['child'].toString()} '),
+                          ],
+                        ),
+                      ),
+                      Text('Fee: Rs.${myOrders["fee"]}')
+                    ],
+                  ),
+                  // date and time
+                  SizedBox(
+                    height: 6.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                          "Issue Date: ${formatter.format(myOrders['date'].toDate())}"),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            // child: Text(myOrders.toString()),
             // child: Text(formatter.format(myOrders['date'].toDate())),
           ),
         ),
@@ -88,3 +150,5 @@ class _MyOrdersState extends State<MyOrders> {
         ));
   }
 }
+
+const ordersTextStyle = TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600);

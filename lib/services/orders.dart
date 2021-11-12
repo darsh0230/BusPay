@@ -2,22 +2,22 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Orders {
-  final _chars =
-      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-  Random _rnd = Random();
+  // final _chars =
+  //     'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  // Random _rnd = Random();
 
-  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
-      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+  // String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
+  //     length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
   Future placeOrder(String uid, int adult, int child, int fee, String stRoute,
-      String endRoute) async {
+      String endRoute, String ticketId) async {
     var collection = FirebaseFirestore.instance.collection('orders');
-    var result = await collection.doc(getRandomString(12)).set({
+    var result = await collection.doc(ticketId).set({
       "adult": adult,
       "child": child,
       "date": DateTime.now(),
       "fee": fee,
-      // "orderId": getRandomString(10),
+      "orderId": ticketId,
       "stRoute": stRoute,
       "endRoute": endRoute,
       "uid": uid,
