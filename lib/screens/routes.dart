@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:buspay/screens/ticket.dart';
 import 'package:buspay/services/bus_data.dart';
 import 'package:buspay/services/orders.dart';
