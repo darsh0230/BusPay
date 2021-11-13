@@ -24,7 +24,7 @@ Note: Make sure internet access and location are enabled.
 <!-- ![img](https://github.com/darsh0230/BusPay/blob/master/GitHubAssets/1636784224292.jpg) -->
 
 5. A digital ticket will be issuded along with receipt id.
-6. <img src="https://github.com/darsh0230/BusPay/blob/master/GitHubAssets/1636784224284.jpg" alt="img" height="400"/>
+<img src="https://github.com/darsh0230/BusPay/blob/master/GitHubAssets/1636784224284.jpg" alt="img" height="400"/>
 <!-- ![img](https://github.com/darsh0230/BusPay/blob/master/GitHubAssets/1636784224284.jpg) -->
 
 6. Click on maps to go back to maps page. You will also will be able to view your bus route marked.
